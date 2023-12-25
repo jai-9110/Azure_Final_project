@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>預約成功</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 20px;
+        }
+
+        /* 提示文字样式 */
+        .success-message {
+            margin-top: 50px;
+            font-size: 24px;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        /* 预约信息样式 */
+        .appointment-info {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>課業守護</h2>
+
+    <!-- 成功信息 -->
+    <p class="success-message">已成功預約</p>
+
+    <!-- 预约信息 -->
+    <div class="appointment-info">
+        <p>Student ID: {{ request.form['studentID'] }}</p>
+        <p>Name: {{ request.form['name'] }}</p>
+    </div>
+
+</body>
+</html>

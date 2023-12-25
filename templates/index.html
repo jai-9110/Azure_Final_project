@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公告格子</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 20px;
+        }
+
+        /* 格子样式 */
+        .announcement-board {
+            width: 700px;  /* 增加宽度 */
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        /* 公告文字样式 */
+        .announcement-title {
+            font-size: 20px;  /* 缩小字体大小 */
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .announcement-text {
+            font-size: 18px;  /* 缩小字体大小 */
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        /* 链接样式 */
+        .contact-link {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        /* 加粗样式 */
+        .bold {
+            font-weight: bold;
+        }
+
+        /* 分隔线样式 */
+        .separator {
+            margin-top: 20px;
+            border-top: 2px dashed #666;  /* 设置颜色为深灰色 */
+        }
+
+        /* 最下面文字样式 */
+        .footer-text {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        /* 高亮部分的样式 */
+        .highlight-text {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        /* 输入框样式 */
+        .input-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .input-box label {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .input-box input {
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        /* 提交按钮样式 */
+        .submit-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>課守預約</h2>
+
+    <div class="announcement-board">
+        <p class="announcement-title">公告</p>
+        <p class="announcement-text">Hi, 同學們</p>
+        <p class="announcement-text">本學期的<span class="bold">OS</span>課守時間已經開始囉 !</span></p>
+        <p class="announcement-text">同學在課堂中有遇到問題或疑惑地方都可利用課業守護時間進行詢問</p>
+        <p class="announcement-text">課業守護者 : <span class="bold">資訊四甲 羅昭艾</span></p>
+        <p class="announcement-text">地點 : <span class="bold">電學213</span></p>
+        <p class="announcement-text">聯絡資訊 : 電子郵件 - <a class="contact-link" href="mailto:example@example.com">example@example.com</a></p>
+        <p class="announcement-text">若需要詢問請先填寫以下資料，方便課守作業，thanks</p>
+    </div>
+
+    <!-- 分隔线 -->
+    <div class="separator"></div>
+
+    <!-- 最下面文字 -->
+    <p class="footer-text">本周課業守護時間 : <span class="highlight-text">{{ next_consultation_time }}</span></p>
+
+    <!-- 输入框 -->
+    <form action="{{ url_for('success') }}" method="post">
+
+        <div class="input-box">
+            <label for="date">Date:</label>
+            <input type="text" id="date" name="date" data-input> <!-- 添加 data-input -->
+            <button type="button" onclick="checkAppointments()">Check</button>
+        </div>
+
+        <div class="input-box">
+            <label for="studentID">Student ID:</label>
+            <input type="text" id="studentID" name="studentID">
+        </div>
+
+        <div class="input-box">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name">
+        </div>
+
+        <!-- 提交按钮 -->
+        <button class="submit-button" type="submit">Submit</button>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        flatpickr("#date", {
+            enableTime: false,
+            dateFormat: "Y-m-d",
+            minDate: "today"
+        });
+
+        function checkAppointments() {
+            var selectedDate = document.getElementById('date').value;
+            fetch(`/query-appointments?date=${selectedDate}`)
+                .then(response => response.json())
+                .then(data => displayAppointmentInfo(data.count))
+                .catch(error => console.error('Error:', error));
+        }
+
+        function displayAppointmentInfo(count) {
+            // 使用弹窗显示预约人数
+            alert(`目前已有 ${count} 人在同一天預約了`);
+        }
+    </script>
+
+</body>
+</html>

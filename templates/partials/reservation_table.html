@@ -1,0 +1,7 @@
+{% for reservation in reservation_information %}
+    <tr>
+        <td>{{ reservation.get('date', '') }}</td>
+        <td>{{ reservation.get('studentID', '') }}</td>
+        <td>{{ reservation.get('name', '') }}</td>
+    </tr>
+{% endfor %}

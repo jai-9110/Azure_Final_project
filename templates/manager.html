@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>預約管理</title>
+    <style>
+        /* 样式可以根据需要进行修改 */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 20px;
+        }
+
+        /* 表格样式 */
+        table {
+            width: 70%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* 分隔线样式 */
+        .separator {
+            margin-top: 20px;
+            border-top: 2px dashed #666;
+        }
+
+        /* 挑選按钮样式 */
+        .all-date-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #5CADAD;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* 挑選按钮样式 */
+        .date-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #FFAF60;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* 挑選按钮样式 */
+        .set-time-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #FF7575;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+
+    <h2>預約管理</h2>
+
+    <!-- 预约信息表格 -->
+    <table id="reservation-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Student-ID</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% include 'partials/reservation_table.html' %}
+        </tbody>
+    </table>
+
+    <!-- 分隔线 -->
+    <div class="separator"></div>
+
+    <div style="display: flex; flex-direction: column; align-items: center;">
+
+        <!-- 第一行：Show All Data 和 Filter by Date -->
+        <div style="display: flex; justify-content: space-between; width: 60%;">
+            <!-- Filter by Date 输入框在按钮左边 -->
+            <div style="display: flex; align-items: center;">
+                <input type="text" id="selectedDate" placeholder="Select a date">
+                <button class="date-button" onclick="filterByDate()" style="margin-left: 10px;">Filter by Date</button>
+            </div>
+            <!-- Show All Data 按钮在右边 -->
+            <button class="all-date-button" onclick="showAllData()" style="margin-left: 10px;">Show All Data</button>
+        </div>
+
+        <div style="margin-bottom: 1em;"></div>
+    
+        <!-- 第二行：Set TA Time -->
+        <div style="display: flex; justify-content: space-between; width: 60%;">
+            <!-- Set TA Time 输入框在按钮左边 -->
+            <div style="display: flex; align-items: center;">
+                <input type="text" id="nextTA" placeholder="Enter TA time">
+                <button class="set-time-button" onclick="setNextTATime()" style="margin-left: 10px;">Set next TA time</button>
+            </div>
+        </div>
+
+    
+    </div>
+
+    <script>
+        // JavaScript 函數：按日期篩選預約信息
+        function filterByDate() {
+            var selectedDate = document.getElementById('selectedDate').value;
+
+            // 使用 jQuery 發送 POST 請求到 Flask 應用
+            $.ajax({
+                url: '/filter_by_date',
+                type: 'POST',
+                data: { date: selectedDate },
+                success: function(response) {
+                    // 更新預約信息表格
+                    $('#reservation-table tbody').html(response);
+                }
+            });
+        }
+
+        // JavaScript 函數：顯示所有資料
+        function showAllData() {
+            // 使用 jQuery 發送 GET 請求到 Flask 應用
+            $.ajax({
+                url: '/show_all_data',
+                type: 'GET',
+                success: function(response) {
+                    // 更新預約信息表格
+                    $('#reservation-table tbody').html(response);
+                }
+            });
+        }
+
+        // JavaScript 函數：设置下次 TA 时间
+        function setNextTATime() {
+            var nextTATime = document.getElementById('nextTA').value;
+
+            // 使用 jQuery 發送 POST 請求到 Flask 應用
+            $.ajax({
+                url: '/update_next_ta_time',
+                type: 'POST',
+                data: { next_consultation: nextTATime },
+                success: function(response) {
+                    // 重载页面
+                    location.reload();
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
